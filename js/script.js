@@ -348,9 +348,15 @@ function renderProductsIfPresent() {
         });
       }
 
-      // Color chip selection (single-select)
+      // Color chip selection (single-select) — also swaps the photo if this
+      // product has one image per color (e.g. White/Black/Grey hoodie photos)
       const colorGroup = card.querySelector("[data-color-group]");
       if (colorGroup) {
+        const mainImg = card.querySelector(".gallery-main");
+        const productImages = getImages(product);
+        const colorsMatchImages =
+          product.colors && product.colors.length > 0 && product.colors.length === productImages.length;
+
         colorGroup.addEventListener("click", function (e) {
           const chip = e.target.closest("[data-color-option]");
           if (!chip) return;
@@ -358,6 +364,23 @@ function renderProductsIfPresent() {
             c.classList.remove("selected");
           });
           chip.classList.add("selected");
+
+          if (colorsMatchImages && mainImg) {
+            const colorIndex = Array.prototype.indexOf.call(
+              colorGroup.querySelectorAll("[data-color-option]"),
+              chip
+            );
+            const matchedSrc = productImages[colorIndex];
+            if (matchedSrc) {
+              mainImg.src = encodeURI(matchedSrc);
+              const thumbGroup = card.querySelector("[data-gallery-thumbs]");
+              if (thumbGroup) {
+                thumbGroup.querySelectorAll(".gallery-thumb").forEach(function (t, i) {
+                  t.classList.toggle("active", i === colorIndex);
+                });
+              }
+            }
+          }
         });
       }
 

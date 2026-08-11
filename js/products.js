@@ -36,6 +36,20 @@
                   add more than one, small thumbnail squares appear under
                   the photo so customers can tap through them (e.g. front,
                   back, close-up, or different angles).
+
+                  SPECIAL CASE — one photo per color (e.g. a hoodie you
+                  sell in White, Black and Grey): if your "colors" list
+                  and your "images" list have the SAME NUMBER of items,
+                  in the SAME ORDER, the site automatically shows the
+                  matching photo when a customer taps a color. Example:
+                    colors: ["White", "Black", "Grey"],
+                    images: ["images/hoodie-white.jpg",
+                              "images/hoodie-black.jpg",
+                              "images/hoodie-grey.jpg"],
+                  Tapping "Black" instantly shows the black hoodie photo.
+                  If the two lists don't match in length, photos just work
+                  as a normal tap-through gallery instead — nothing breaks.
+
                   Until you add a real photo, a placeholder image shows
                   automatically, so it's safe to leave as a single
                   placeholder link while you're still gathering photos.
@@ -56,8 +70,9 @@ const PRODUCTS = [
     description:
       "Vibrant Ankara-print dress with a flattering fit — perfect for church, events or everyday elegance.",
     images: [
-      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+1+Front",
-      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+2+Back",
+      "https://placehold.co/600x750/A6532E/FBF7EF?text=Red",
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Blue",
+      "https://placehold.co/600x750/2E7D4F/FBF7EF?text=Green",
     ],
     badge: "Best Seller",
     inStock: true,
