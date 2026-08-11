@@ -27,10 +27,18 @@
                   The customer taps one color before ordering, and it's
                   included automatically in the WhatsApp message.
    description -> A short 1-2 sentence description of the product.
-   image       -> Link to a photo. EASIEST OPTION: upload your photo to the
-                  "images" folder (e.g. images/red-dress.jpg) and write:
-                  "images/red-dress.jpg"
-                  Until you add a real photo, a placeholder image will show.
+   images      -> A LIST of one or more photos, in square brackets.
+                  One photo:  images: ["images/red-dress.jpg"]
+                  Multiple:   images: ["images/red-dress-front.jpg",
+                                        "images/red-dress-back.jpg",
+                                        "images/red-dress-detail.jpg"]
+                  The first photo in the list is shown by default. If you
+                  add more than one, small thumbnail squares appear under
+                  the photo so customers can tap through them (e.g. front,
+                  back, close-up, or different angles).
+                  Until you add a real photo, a placeholder image shows
+                  automatically, so it's safe to leave as a single
+                  placeholder link while you're still gathering photos.
    badge       -> Optional small label, e.g. "New", "Best Seller", "Sale".
                   Leave as "" (empty quotes) if you don't want a badge.
    inStock     -> true or false. Set to false to show "Sold Out" and hide
@@ -47,7 +55,10 @@ const PRODUCTS = [
     colors: ["Red", "Blue", "Green"],
     description:
       "Vibrant Ankara-print dress with a flattering fit — perfect for church, events or everyday elegance.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: [
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+1+Front",
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+2+Back",
+    ],
     badge: "Best Seller",
     inStock: true,
   },
@@ -60,7 +71,7 @@ const PRODUCTS = [
     colors: ["Black", "Khaki", "Navy"],
     description:
       "Smart-casual slim fit chinos, comfortable stretch fabric, great for the office or weekends out.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"],
     badge: "New",
     inStock: true,
   },
@@ -73,7 +84,7 @@ const PRODUCTS = [
     colors: ["Black", "Brown"],
     description:
       "Durable faux-leather ankle boots with a comfortable heel — stylish for both day and night wear.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"],
     badge: "",
     inStock: true,
   },
@@ -86,7 +97,11 @@ const PRODUCTS = [
     colors: ["White", "Black", "Blue"],
     description:
       "Everyday sneakers with cushioned soles, built for comfort whether you're walking or standing all day.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: [
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+1+Side",
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+2+Sole",
+      "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+3+Box",
+    ],
     badge: "",
     inStock: true,
   },
@@ -99,7 +114,7 @@ const PRODUCTS = [
     colors: ["Grey", "Maroon", "Blue"],
     description:
       "Soft, breathable cotton-blend bedding set including duvet cover, bedsheet and 4 pillowcases.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"],
     badge: "Best Seller",
     inStock: true,
   },
@@ -112,7 +127,7 @@ const PRODUCTS = [
     colors: ["Beige", "Grey"],
     description:
       "Warm, lightweight fleece throw blanket — cozy for cold nights and easy to machine wash.",
-    image: "https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo",
+    images: ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"],
     badge: "New",
     inStock: true,
   },

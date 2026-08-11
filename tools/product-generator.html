@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Manager — DK Collections (Admin Tool)</title>
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#1e3a2c; --forest-dark:#142a1f; --gold:#c79a45; --gold-light:#e4c67a;
+    --rust:#a6532e; --ivory:#fbf7ef; --card:#fffdf8; --charcoal:#241f1b;
+    --charcoal-soft:#5a534c; --line:#e7ddc9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:"Inter",sans-serif; background:var(--ivory); color:var(--charcoal); line-height:1.5;}
+  header{background:var(--forest); color:var(--ivory); padding:18px 20px;}
+  header h1{font-family:"Fraunces",serif; font-size:1.3rem; margin:0; font-weight:600;}
+  header p{margin:4px 0 0; font-size:0.85rem; color:rgba(251,247,239,0.8);}
+  .wrap{max-width:1000px; margin:0 auto; padding:20px;}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; margin-bottom:20px;}
+  .panel h2{font-family:"Fraunces",serif; font-size:1.1rem; margin:0 0 14px; color:var(--forest-dark);}
+  label{display:block; font-size:0.8rem; font-weight:700; margin-bottom:5px; color:var(--charcoal-soft); text-transform:uppercase; letter-spacing:0.03em;}
+  input[type=text], input[type=number], select, textarea{
+    width:100%; border:1.5px solid var(--line); border-radius:8px; padding:10px 12px;
+    font-family:inherit; font-size:0.92rem; background:var(--ivory); color:var(--charcoal); margin-bottom:14px;
+  }
+  input:focus, select:focus, textarea:focus{ outline:none; border-color:var(--gold); }
+  textarea{ resize:vertical; min-height:70px; }
+  .row{ display:grid; grid-template-columns:1fr; gap:0 16px; }
+  @media(min-width:640px){ .row.two{ grid-template-columns:1fr 1fr; } .row.two > *{ min-width:0; } }
+  .hint{ font-size:0.78rem; color:var(--charcoal-soft); margin:-10px 0 14px; }
+  .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 20px;
+    border-radius:999px; font-weight:700; font-size:0.9rem; border:2px solid transparent; cursor:pointer; }
+  .btn-primary{ background:var(--gold); color:var(--forest-dark); }
+  .btn-primary:hover{ background:var(--gold-light); }
+  .btn-outline{ background:transparent; border-color:var(--forest); color:var(--forest-dark); }
+  .btn-outline:hover{ background:rgba(30,58,44,0.06); }
+  .btn-danger{ background:transparent; border-color:var(--rust); color:var(--rust); padding:6px 12px; font-size:0.78rem; }
+  .checkbox-row{ display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+  .checkbox-row input{ width:auto; margin:0; }
+  .checkbox-row label{ margin:0; text-transform:none; font-weight:600; font-size:0.9rem; }
+  table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  th, td{ text-align:left; padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--charcoal-soft); }
+  .empty{ padding:20px; text-align:center; color:var(--charcoal-soft); font-size:0.9rem; }
+  #codeOutput{ width:100%; min-height:260px; font-family:ui-monospace,Consolas,monospace; font-size:0.78rem;
+    background:#fff; border:1.5px solid var(--line); border-radius:8px; padding:14px; white-space:pre; overflow:auto; }
+  .actions-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .status-msg{ font-size:0.82rem; margin-top:8px; color:#2e7d4f; font-weight:600; min-height:1.2em; }
+  .badge-tag{ display:inline-block; background:var(--gold); color:var(--forest-dark); font-size:0.7rem; font-weight:700;
+    padding:2px 8px; border-radius:999px; margin-left:6px; }
+  .soldout-tag{ background:var(--rust); color:#fff; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🛠 Product Manager</h1>
+  <p>Internal tool for DK Collections — build your products.js file without writing code. Not linked from your public site.</p>
+</header>
+
+<div class="wrap">
+
+  <!-- ===================== IMPORT EXISTING FILE ===================== -->
+  <div class="panel">
+    <h2>1. Load your current products (optional)</h2>
+    <p class="hint">Already have a <code>js/products.js</code> file with products in it? Upload it here to load them into this tool so you can add more or edit them. If you're starting fresh, skip this.</p>
+    <input type="file" id="importFile" accept=".js,text/javascript">
+    <div class="status-msg" id="importStatus"></div>
+  </div>
+
+  <!-- ===================== ADD / EDIT FORM ===================== -->
+  <div class="panel">
+    <h2 id="formTitle">2. Add a product</h2>
+
+    <div class="row two">
+      <div>
+        <label for="f-name">Product Name</label>
+        <input type="text" id="f-name" placeholder="e.g. Classic Ankara Print Dress">
+      </div>
+      <div>
+        <label for="f-category">Category</label>
+        <select id="f-category">
+          <option value="clothes">Clothes</option>
+          <option value="shoes">Shoes</option>
+          <option value="beddings">Beddings</option>
+          <option value="accessories">Accessories</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row two">
+      <div>
+        <label for="f-price">Price (KES, numbers only)</label>
+        <input type="number" id="f-price" placeholder="e.g. 2500" min="0" step="1">
+      </div>
+      <div>
+        <label for="f-badge">Badge</label>
+        <select id="f-badge">
+          <option value="">No badge</option>
+          <option value="New">New</option>
+          <option value="Best Seller">Best Seller</option>
+          <option value="Sale">Sale</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row two">
+      <div>
+        <label for="f-sizes">Sizes (comma-separated)</label>
+        <input type="text" id="f-sizes" placeholder="e.g. S, M, L, XL  or  38, 39, 40">
+      </div>
+      <div>
+        <label for="f-colors">Colors (comma-separated, optional)</label>
+        <input type="text" id="f-colors" placeholder="e.g. Black, Blue, Red — leave blank if none">
+      </div>
+    </div>
+
+    <label for="f-desc">Description</label>
+    <textarea id="f-desc" placeholder="A short 1-2 sentence description of the product."></textarea>
+
+    <label for="f-images">Image filename(s)</label>
+    <input type="text" id="f-images" placeholder="images/red-dress-front.jpg, images/red-dress-back.jpg">
+    <p class="hint">One photo, or several separated by commas. The first one is the main photo — extra ones become tappable thumbnails on the product card. Upload the actual photo files into your <code>images</code> folder separately; this box just tells the site what each file is called. Leave blank to use a placeholder for now.</p>
+
+    <div class="checkbox-row">
+      <input type="checkbox" id="f-instock" checked>
+      <label for="f-instock">In stock (uncheck to show "Sold Out")</label>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-primary" id="saveBtn" type="button">Add Product to List</button>
+      <button class="btn btn-outline" id="cancelEditBtn" type="button" style="display:none;">Cancel Edit</button>
+    </div>
+  </div>
+
+  <!-- ===================== PRODUCT LIST ===================== -->
+  <div class="panel">
+    <h2>3. Your products (<span id="countLabel">0</span>)</h2>
+    <div id="listWrap"><p class="empty">No products added yet — use the form above.</p></div>
+  </div>
+
+  <!-- ===================== GENERATE OUTPUT ===================== -->
+  <div class="panel">
+    <h2>4. Get your products.js file</h2>
+    <p class="hint">When you're happy with your list, generate the file below, then either download it directly or copy the code and paste it into <code>js/products.js</code> — replacing everything in that file.</p>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="generateBtn" type="button">Generate Code</button>
+      <button class="btn btn-outline" id="downloadBtn" type="button">Download products.js</button>
+      <button class="btn btn-outline" id="copyBtn" type="button">Copy Code</button>
+    </div>
+    <div class="status-msg" id="genStatus"></div>
+    <br>
+    <textarea id="codeOutput" readonly placeholder="Click 'Generate Code' above to see your products.js file here..."></textarea>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================================
+   PRODUCT MANAGER — runs entirely in your browser. Nothing is uploaded
+   anywhere. Your product list is also saved to this browser's local
+   storage automatically, so it's still here if you close the tab.
+   ========================================================================= */
+
+const STORAGE_KEY = "dk_admin_products_v1";
+let products = loadFromStorage();
+let editingIndex = null;
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
+  } catch (e) { /* ignore quota errors */ }
+}
+
+function nextId() {
+  let n = products.length + 1;
+  let id = "p" + n;
+  const existingIds = products.map(function (p) { return p.id; });
+  while (existingIds.indexOf(id) !== -1) {
+    n++;
+    id = "p" + n;
+  }
+  return id;
+}
+
+function splitList(str) {
+  return (str || "")
+    .split(",")
+    .map(function (s) { return s.trim(); })
+    .filter(function (s) { return s.length > 0; });
+}
+
+function escapeJS(str) {
+  return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
+/* ---------- Form handling ---------- */
+const el = {
+  name: document.getElementById("f-name"),
+  category: document.getElementById("f-category"),
+  price: document.getElementById("f-price"),
+  badge: document.getElementById("f-badge"),
+  sizes: document.getElementById("f-sizes"),
+  colors: document.getElementById("f-colors"),
+  desc: document.getElementById("f-desc"),
+  images: document.getElementById("f-images"),
+  instock: document.getElementById("f-instock"),
+};
+
+function clearForm() {
+  el.name.value = "";
+  el.category.value = "clothes";
+  el.price.value = "";
+  el.badge.value = "";
+  el.sizes.value = "";
+  el.colors.value = "";
+  el.desc.value = "";
+  el.images.value = "";
+  el.instock.checked = true;
+}
+
+document.getElementById("saveBtn").addEventListener("click", function () {
+  const name = el.name.value.trim();
+  const price = parseFloat(el.price.value);
+  const sizes = splitList(el.sizes.value);
+
+  if (!name) { alert("Please enter a product name."); return; }
+  if (!price || price <= 0) { alert("Please enter a valid price."); return; }
+  if (sizes.length === 0) { alert("Please enter at least one size (use \"One Size\" if it doesn't need sizing)."); return; }
+
+  const enteredImages = splitList(el.images.value);
+  const images = enteredImages.length > 0
+    ? enteredImages
+    : ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"];
+
+  const product = {
+    id: editingIndex !== null ? products[editingIndex].id : nextId(),
+    name: name,
+    category: el.category.value,
+    price: price,
+    sizes: sizes,
+    colors: splitList(el.colors.value),
+    description: el.desc.value.trim() || "No description added yet.",
+    images: images,
+    badge: el.badge.value,
+    inStock: el.instock.checked,
+  };
+
+  if (editingIndex !== null) {
+    products[editingIndex] = product;
+    editingIndex = null;
+    document.getElementById("formTitle").textContent = "2. Add a product";
+    document.getElementById("saveBtn").textContent = "Add Product to List";
+    document.getElementById("cancelEditBtn").style.display = "none";
+  } else {
+    products.push(product);
+  }
+
+  saveToStorage();
+  clearForm();
+  renderList();
+});
+
+document.getElementById("cancelEditBtn").addEventListener("click", function () {
+  editingIndex = null;
+  clearForm();
+  document.getElementById("formTitle").textContent = "2. Add a product";
+  document.getElementById("saveBtn").textContent = "Add Product to List";
+  this.style.display = "none";
+});
+
+function editProduct(index) {
+  const p = products[index];
+  el.name.value = p.name;
+  el.category.value = p.category;
+  el.price.value = p.price;
+  el.badge.value = p.badge || "";
+  el.sizes.value = (p.sizes || []).join(", ");
+  el.colors.value = (p.colors || []).join(", ");
+  el.desc.value = p.description;
+  const imgs = Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []);
+  el.images.value = imgs.filter(function (src) { return src.indexOf("placehold.co") === -1; }).join(", ");
+  el.instock.checked = p.inStock !== false;
+
+  editingIndex = index;
+  document.getElementById("formTitle").textContent = "2. Edit product — " + p.name;
+  document.getElementById("saveBtn").textContent = "Save Changes";
+  document.getElementById("cancelEditBtn").style.display = "inline-flex";
+  window.scrollTo({ top: document.getElementById("formTitle").offsetTop - 20, behavior: "smooth" });
+}
+
+function removeProduct(index) {
+  if (!confirm("Remove \"" + products[index].name + "\" from the list?")) return;
+  products.splice(index, 1);
+  saveToStorage();
+  renderList();
+}
+
+/* ---------- List rendering ---------- */
+function renderList() {
+  const wrap = document.getElementById("listWrap");
+  document.getElementById("countLabel").textContent = products.length;
+
+  if (products.length === 0) {
+    wrap.innerHTML = '<p class="empty">No products added yet — use the form above.</p>';
+    return;
+  }
+
+  let rows = products.map(function (p, i) {
+    const badgeHtml = p.badge
+      ? '<span class="badge-tag">' + p.badge + "</span>"
+      : "";
+    const stockHtml = p.inStock === false
+      ? '<span class="badge-tag soldout-tag">Sold Out</span>'
+      : "";
+    return (
+      "<tr>" +
+      "<td><strong>" + p.name + "</strong>" + badgeHtml + stockHtml + "<br><span style='color:var(--charcoal-soft)'>" + p.id + " · " + p.category + "</span></td>" +
+      "<td>KES " + Number(p.price).toLocaleString() + "</td>" +
+      "<td>" + (p.sizes || []).join(", ") + "</td>" +
+      "<td>" + ((p.colors || []).join(", ") || "—") + "</td>" +
+      "<td>" +
+      '<button class="btn btn-outline" style="padding:6px 12px;font-size:0.78rem;margin-bottom:6px;" onclick="editProduct(' + i + ')">Edit</button><br>' +
+      '<button class="btn btn-danger" onclick="removeProduct(' + i + ')">Remove</button>' +
+      "</td>" +
+      "</tr>"
+    );
+  }).join("");
+
+  wrap.innerHTML =
+    "<table><thead><tr><th>Product</th><th>Price</th><th>Sizes</th><th>Colors</th><th>Actions</th></tr></thead><tbody>" +
+    rows +
+    "</tbody></table>";
+}
+
+/* ---------- Code generation ---------- */
+function buildFileContent() {
+  const header =
+`/* =========================================================================
+   DK COLLECTIONS — PRODUCT CATALOG
+   Generated with the Product Manager tool. You can still hand-edit this
+   file directly if you prefer — see tools/product-generator.html to
+   regenerate it any time.
+   ========================================================================= */
+
+const PRODUCTS = [
+`;
+
+  const blocks = products.map(function (p) {
+    return (
+      "  {\n" +
+      '    id: "' + escapeJS(p.id) + '",\n' +
+      '    name: "' + escapeJS(p.name) + '",\n' +
+      '    category: "' + escapeJS(p.category) + '",\n' +
+      "    price: " + Number(p.price) + ",\n" +
+      "    sizes: [" + p.sizes.map(function (s) { return '"' + escapeJS(s) + '"'; }).join(", ") + "],\n" +
+      "    colors: [" + (p.colors || []).map(function (c) { return '"' + escapeJS(c) + '"'; }).join(", ") + "],\n" +
+      '    description:\n      "' + escapeJS(p.description) + '",\n' +
+      "    images: [" + (p.images || []).map(function (src) { return '"' + escapeJS(src) + '"'; }).join(", ") + "],\n" +
+      '    badge: "' + escapeJS(p.badge || "") + '",\n' +
+      "    inStock: " + (p.inStock !== false) + ",\n" +
+      "  },"
+    );
+  }).join("\n");
+
+  const footer = "\n\n  // 👇 Add new products above this line, just before the closing bracket.\n];\n";
+
+  return header + blocks + footer;
+}
+
+document.getElementById("generateBtn").addEventListener("click", function () {
+  if (products.length === 0) {
+    document.getElementById("genStatus").textContent = "Add at least one product first.";
+    return;
+  }
+  document.getElementById("codeOutput").value = buildFileContent();
+  document.getElementById("genStatus").textContent = "Code generated below ✓";
+  setTimeout(function () {
+    document.getElementById("genStatus").textContent = "";
+  }, 3000);
+});
+
+document.getElementById("copyBtn").addEventListener("click", function () {
+  const output = document.getElementById("codeOutput");
+  if (!output.value) {
+    document.getElementById("genStatus").textContent = "Click \"Generate Code\" first.";
+    return;
+  }
+  output.select();
+  navigator.clipboard.writeText(output.value).then(function () {
+    document.getElementById("genStatus").textContent = "Copied to clipboard ✓ — paste it into js/products.js";
+    setTimeout(function () { document.getElementById("genStatus").textContent = ""; }, 4000);
+  });
+});
+
+document.getElementById("downloadBtn").addEventListener("click", function () {
+  if (products.length === 0) {
+    document.getElementById("genStatus").textContent = "Add at least one product first.";
+    return;
+  }
+  const content = buildFileContent();
+  document.getElementById("codeOutput").value = content;
+  const blob = new Blob([content], { type: "text/javascript" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "products.js";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  document.getElementById("genStatus").textContent = "Downloaded products.js ✓ — replace the file in your js folder with this one.";
+  setTimeout(function () { document.getElementById("genStatus").textContent = ""; }, 5000);
+});
+
+/* ---------- Import existing products.js ---------- */
+document.getElementById("importFile").addEventListener("change", function (e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function (evt) {
+    try {
+      const text = evt.target.result;
+      const match = text.match(/const\s+PRODUCTS\s*=\s*(\[[\s\S]*\]);/);
+      if (!match) throw new Error("Could not find a PRODUCTS list in that file.");
+      const arr = Function('"use strict"; return (' + match[1] + ");")();
+      if (!Array.isArray(arr)) throw new Error("That file doesn't look like a valid products.js file.");
+
+      const imported = arr.map(function (p) {
+        return {
+          id: p.id || nextId(),
+          name: p.name || "",
+          category: p.category || "clothes",
+          price: p.price || 0,
+          sizes: p.sizes || [],
+          colors: p.colors || [],
+          description: p.description || "",
+          images: Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []),
+          badge: p.badge || "",
+          inStock: p.inStock !== false,
+        };
+      });
+
+      products = imported;
+      saveToStorage();
+      renderList();
+      document.getElementById("importStatus").textContent =
+        "Imported " + imported.length + " product(s) ✓";
+      setTimeout(function () {
+        document.getElementById("importStatus").textContent = "";
+      }, 4000);
+    } catch (err) {
+      document.getElementById("importStatus").textContent =
+        "Couldn't read that file — please make sure it's your products.js file.";
+    }
+  };
+  reader.readAsText(file);
+});
+
+/* ---------- Init ---------- */
+renderList();
+</script>
+</body>
+</html>

@@ -184,12 +184,49 @@ function renderProductsIfPresent() {
     wireProductCardInteractions(items);
   }
 
+  function getImages(p) {
+    if (Array.isArray(p.images) && p.images.length > 0) return p.images;
+    if (p.image) return [p.image]; // backward compatibility with older single-image entries
+    return ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"];
+  }
+
   function productCardHTML(p) {
     const badge = !p.inStock
       ? '<span class="product-badge sold-out">Sold Out</span>'
       : p.badge
       ? '<span class="product-badge">' + escapeHTML(p.badge) + "</span>"
       : "";
+
+    const images = getImages(p);
+    const mainImage =
+      '<img class="gallery-main" src="' +
+      encodeURI(images[0]) +
+      '" alt="' +
+      escapeHTML(p.name) +
+      '" loading="lazy" onerror="this.src=\'https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+Coming+Soon\'">';
+
+    const thumbs =
+      images.length > 1
+        ? '<div class="gallery-thumbs" data-gallery-thumbs>' +
+          images
+            .map(function (src, i) {
+              return (
+                '<button type="button" class="gallery-thumb' +
+                (i === 0 ? " active" : "") +
+                '" data-img-src="' +
+                encodeURI(src) +
+                '" aria-label="Photo ' +
+                (i + 1) +
+                '">' +
+                '<img src="' +
+                encodeURI(src) +
+                '" alt="" loading="lazy" onerror="this.src=\'https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+Coming+Soon\'">' +
+                "</button>"
+              );
+            })
+            .join("") +
+          "</div>"
+        : "";
 
     const sizes = (p.sizes || [])
       .map(function (s, i) {
@@ -233,12 +270,9 @@ function renderProductsIfPresent() {
       p.id +
       '">' +
       '<div class="product-media">' +
-      '<img src="' +
-      encodeURI(p.image) +
-      '" alt="' +
-      escapeHTML(p.name) +
-      '" loading="lazy" onerror="this.src=\'https://placehold.co/600x750/1E3A2C/FBF7EF?text=Photo+Coming+Soon\'">' +
+      mainImage +
       badge +
+      thumbs +
       "</div>" +
       '<div class="product-body">' +
       "<h3>" +
@@ -285,6 +319,21 @@ function renderProductsIfPresent() {
         return p.id === productId;
       });
       if (!product) return;
+
+      // Gallery thumbnail selection (swap main image)
+      const thumbGroup = card.querySelector("[data-gallery-thumbs]");
+      if (thumbGroup) {
+        const mainImg = card.querySelector(".gallery-main");
+        thumbGroup.addEventListener("click", function (e) {
+          const thumb = e.target.closest(".gallery-thumb");
+          if (!thumb || !mainImg) return;
+          mainImg.src = thumb.getAttribute("data-img-src");
+          thumbGroup.querySelectorAll(".gallery-thumb").forEach(function (t) {
+            t.classList.remove("active");
+          });
+          thumb.classList.add("active");
+        });
+      }
 
       // Size chip selection (single-select)
       const sizeGroup = card.querySelector("[data-size-group]");
