@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Us — DK Collections</title>
+<meta name="description" content="Contact DK Collections on WhatsApp 0798 852 352, or pay via M-Pesa Till Number 8418310.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-row">
+    <a href="index.html" class="brand">DK <span class="brand-mark">Collections</span></a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="how-to-order.html">How to Order &amp; Pay</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="pattern-strip" aria-hidden="true"></div>
+
+<section style="padding-bottom:0;">
+  <div class="container section-head">
+    <span class="eyebrow">We'd Love to Hear From You</span>
+    <h1 class="mt-0" style="font-size:clamp(1.7rem,5vw,2.3rem);">Contact DK Collections</h1>
+    <p style="color:var(--charcoal-soft); max-width:60ch;">
+      Questions about an item, sizing, or delivery? Reach us directly on WhatsApp — that's where we're fastest.
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="info-grid cols-2">
+      <div class="big-number-card">
+        <span class="label">WhatsApp</span>
+        <span class="value" data-config="whatsappNumberDisplay">0798 852 352</span>
+        <div class="copy-row">
+          <a class="btn btn-whatsapp" data-wa-link="Hi DK Collections! I have a question." href="#">Chat on WhatsApp</a>
+          <button class="btn btn-outline" data-copy="whatsappNumberDisplay">Copy Number</button>
+        </div>
+        <div class="copy-feedback" data-copy-feedback="whatsappNumberDisplay"></div>
+      </div>
+      <div class="big-number-card" style="background:var(--forest-dark);">
+        <span class="label">M-Pesa Till Number</span>
+        <span class="value" data-config="tillNumber">8418310</span>
+        <div class="copy-row">
+          <button class="btn btn-primary" data-copy="tillNumber">Copy Till Number</button>
+        </div>
+        <div class="copy-feedback" data-copy-feedback="tillNumber"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="info-grid cols-2">
+      <div class="info-card">
+        <h3 class="mt-0">📍 Where We're Based</h3>
+        <!-- EDITABLE: replace with your real location / pickup point -->
+        <p style="color:var(--charcoal-soft);">Nairobi, Kenya — deliveries arranged countrywide via WhatsApp.</p>
+      </div>
+      <div class="info-card">
+        <h3 class="mt-0">🕒 Business Hours</h3>
+        <!-- EDITABLE: replace with your real working hours -->
+        <p style="color:var(--charcoal-soft);">Monday – Saturday: 8:00 AM – 7:00 PM<br>Sunday: 10:00 AM – 4:00 PM</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <div class="info-card text-center">
+      <h3 class="mt-0">Prefer to just call?</h3>
+      <p style="color:var(--charcoal-soft);">You can also reach us by phone using the same number.</p>
+      <a class="btn btn-dark-outline" data-tel-link href="#" data-config-skip>Call <span data-config="whatsappNumberDisplay">0798 852 352</span></a>
+    </div>
+  </div>
+</section>
+
+<div class="pattern-strip" aria-hidden="true"></div>
+<footer class="site-footer">
+  <div class="container footer-row">
+    <div>
+      <div class="footer-brand">DK Collections</div>
+      <div>Clothes · Shoes · Beddings — Kenya</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="how-to-order.html">How to Order &amp; Pay</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="container" style="margin-top:18px; opacity:0.65;">
+    &copy; <span id="year"></span> DK Collections. All rights reserved.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/script.js"></script>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

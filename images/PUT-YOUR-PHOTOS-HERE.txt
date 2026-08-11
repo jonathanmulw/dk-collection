@@ -1,0 +1,13 @@
+Put your product photos in this folder.
+
+Example: images/red-ankara-dress.jpg
+
+Then in js/products.js, set that product's "image" field to:
+  "images/red-ankara-dress.jpg"
+
+Tips for good photos on a phone:
+- Use natural daylight, near a window, avoid direct harsh sun.
+- Use a plain background (a wall, bedsheet, or the floor).
+- Keep the item centered and take the photo in portrait orientation.
+- Keep file sizes reasonable (under 1MB each) so the site loads fast —
+  most phone camera apps have a "smaller file size" or "compress" option.

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — DK Collections</title>
+<meta name="description" content="Browse clothing, shoes and beddings from DK Collections. Order any item directly on WhatsApp and pay by M-Pesa Till Number.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="nav-row">
+    <a href="index.html" class="brand">DK <span class="brand-mark">Collections</span></a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="how-to-order.html">How to Order &amp; Pay</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+<div class="pattern-strip" aria-hidden="true"></div>
+
+<section style="padding-bottom:0;">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Our Catalogue</span>
+      <h1 class="mt-0" style="font-size:clamp(1.7rem,5vw,2.3rem);">Shop Clothing, Shoes &amp; Beddings</h1>
+      <p style="color:var(--charcoal-soft); max-width:60ch;">
+        Tap "Order via WhatsApp" on any item to message us the product name, price and size instantly — no forms, no waiting.
+      </p>
+    </div>
+
+    <div class="filter-row" id="filter-row">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="clothes">Clothes</button>
+      <button class="filter-btn" data-filter="shoes">Shoes</button>
+      <button class="filter-btn" data-filter="beddings">Beddings</button>
+      <button class="filter-btn" data-filter="accessories">Accessories</button>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0;">
+  <div class="container">
+    <!-- Products are rendered here automatically from js/products.js -->
+    <div class="product-grid" id="products-grid"></div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="info-card text-center">
+      <h3 class="mt-0">Don't see what you're looking for?</h3>
+      <p style="color:var(--charcoal-soft);">Message us on WhatsApp — we often have more items in stock than shown here.</p>
+      <a class="btn btn-whatsapp" data-wa-link="Hi DK Collections! I'm looking for something specific — is it available?" href="#">Ask Us on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<div class="pattern-strip" aria-hidden="true"></div>
+<footer class="site-footer">
+  <div class="container footer-row">
+    <div>
+      <div class="footer-brand">DK Collections</div>
+      <div>Clothes · Shoes · Beddings — Kenya</div>
+    </div>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Products</a></li>
+      <li><a href="how-to-order.html">How to Order &amp; Pay</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+  <div class="container" style="margin-top:18px; opacity:0.65;">
+    &copy; <span id="year"></span> DK Collections. All rights reserved.
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/products.js"></script>
+<script src="js/script.js"></script>
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
