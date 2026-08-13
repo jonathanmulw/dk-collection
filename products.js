@@ -14,7 +14,7 @@ const PRODUCTS = [
     id: "p1",
     name: "Nike Cortez",
     category: "shoes",
-    price: 2500,
+    price: 3500,
     sizes: ["39", "40", "41", "42", "43", "44", "45"],
     colors: ["White", "Black"],
     description:
@@ -27,7 +27,7 @@ const PRODUCTS = [
     id: "p2",
     name: "Heavy Hoodies",
     category: "clothes",
-    price: 1600,
+    price: 2600,
     sizes: ["L", "XL", "2XL", "3XL"],
     colors: ["White", "Black", "Grey"],
     description:
@@ -44,7 +44,7 @@ const PRODUCTS = [
     id: "p3",
     name: "Timberland Loafers",
     category: "shoes",
-    price: 2800,
+    price: 3800,
     sizes: ["40", "41", "42", "43", "44", "45"],
     colors: ["Black", "Brown"],
     description:
@@ -60,7 +60,7 @@ const PRODUCTS = [
     id: "p4",
     name: "Nike SB Dunks",
     category: "shoes",
-    price: 2500,
+    price: 3500,
     sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
     colors: ["Black/White", "Blue/White", "Red/White", "Grey/White"],
     description:
@@ -78,7 +78,7 @@ const PRODUCTS = [
     id: "p5",
     name: "LV Loafers",
     category: "shoes",
-    price: 2700,
+    price: 3700,
     sizes: ["40", "41", "42", "43", "44", "45"],
     colors: [],
     description:
@@ -91,7 +91,7 @@ const PRODUCTS = [
     id: "p6",
     name: "Nike TN",
     category: "shoes",
-    price: 2600,
+    price: 3600,
     sizes: ["40", "41", "42", "43", "44", "45"],
     colors: [],
     description:
