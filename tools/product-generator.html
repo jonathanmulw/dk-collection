@@ -6,6 +6,7 @@
 <title>Product Manager — DK Collections (Admin Tool)</title>
 <meta name="robots" content="noindex, nofollow">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
   :root{
     --forest:#1e3a2c; --forest-dark:#142a1f; --gold:#c79a45; --gold-light:#e4c67a;
@@ -51,6 +52,12 @@
   .badge-tag{ display:inline-block; background:var(--gold); color:var(--forest-dark); font-size:0.7rem; font-weight:700;
     padding:2px 8px; border-radius:999px; margin-left:6px; }
   .soldout-tag{ background:var(--rust); color:#fff; }
+  .photo-preview{ display:flex; flex-wrap:wrap; gap:8px; margin:-6px 0 14px; }
+  .photo-preview .thumb{ width:64px; height:64px; border-radius:8px; overflow:hidden; border:1.5px solid var(--line); position:relative; background:var(--forest); }
+  .photo-preview .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-preview .thumb .fname{ position:absolute; left:0; right:0; bottom:0; background:rgba(20,42,31,0.85); color:#fff; font-size:0.55rem; padding:2px 3px; text-align:center; word-break:break-all; line-height:1.1; }
+  .file-input-wrap{ border:1.5px dashed var(--line); border-radius:8px; padding:12px; margin-bottom:8px; background:var(--ivory); }
+  .photo-tag{ display:inline-block; background:var(--forest); color:var(--ivory); font-size:0.7rem; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:6px; }
 </style>
 </head>
 <body>
@@ -122,7 +129,22 @@
 
     <label for="f-images">Image filename(s)</label>
     <input type="text" id="f-images" placeholder="images/red-dress-front.jpg, images/red-dress-back.jpg">
-    <p class="hint">One photo, or several separated by commas. The first one is the main photo — extra ones become tappable thumbnails on the product card. <strong>Tip:</strong> if this item comes in different colors (e.g. a hoodie in White, Black, Grey), list one photo per color, in the <em>same order</em> as your Colors field above — the site will automatically show the matching photo when a customer taps a color. Upload the actual photo files into your <code>images</code> folder separately; this box just tells the site what each file is called. Leave blank to use a placeholder for now.</p>
+    <p class="hint">Only needed if you're <strong>not</strong> attaching real photos below — type filenames manually here instead. If you attach real photos below, this box fills in automatically and you can ignore it.</p>
+
+    <label for="f-photofiles">Attach the real photo(s) for this product</label>
+    <div class="file-input-wrap">
+      <input type="file" id="f-photofiles" accept="image/*" multiple>
+    </div>
+    <p class="hint">
+      Pick the actual photo file(s) from your phone/laptop. They'll be automatically renamed to match this
+      product (e.g. <code>nike-cortez-white.jpg</code>) — no manual renaming needed.
+      <strong>If this item has colors</strong> (filled in above), attach the photos in the <em>same order</em>
+      as your colors list, and each photo gets named after its color automatically.
+      <strong>Important:</strong> attached photos only stay in this tool while this browser tab is open —
+      download your ZIP (step 5 below) before closing or refreshing the page.
+    </p>
+    <div class="photo-preview" id="photoPreview"></div>
+    <div class="status-msg" id="attachedNote"></div>
 
     <div class="checkbox-row">
       <input type="checkbox" id="f-instock" checked>
@@ -141,9 +163,19 @@
     <div id="listWrap"><p class="empty">No products added yet — use the form above.</p></div>
   </div>
 
+  <!-- ===================== DOWNLOAD PHOTOS ===================== -->
+  <div class="panel">
+    <h2>4. Get your renamed photos</h2>
+    <p class="hint">Every real photo you attached while adding products above gets packaged here, already renamed to match <code>products.js</code>. Download the ZIP, unzip it, then drag its contents straight into your <code>images</code> folder on GitHub.</p>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="downloadPhotosBtn" type="button">Download All Photos (Renamed ZIP)</button>
+    </div>
+    <div class="status-msg" id="photosStatus"></div>
+  </div>
+
   <!-- ===================== GENERATE OUTPUT ===================== -->
   <div class="panel">
-    <h2>4. Get your products.js file</h2>
+    <h2>5. Get your products.js file</h2>
     <p class="hint">When you're happy with your list, generate the file below, then either download it directly or copy the code and paste it into <code>js/products.js</code> — replacing everything in that file.</p>
     <div class="actions-row">
       <button class="btn btn-primary" id="generateBtn" type="button">Generate Code</button>
@@ -214,8 +246,38 @@ const el = {
   colors: document.getElementById("f-colors"),
   desc: document.getElementById("f-desc"),
   images: document.getElementById("f-images"),
+  photofiles: document.getElementById("f-photofiles"),
   instock: document.getElementById("f-instock"),
 };
+
+// Photo files attached per product, keyed by product id.
+// SESSION ONLY — not saved to localStorage (File objects can't be serialized).
+let photoFiles = {};
+
+function slugify(str) {
+  return String(str)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-+|-+$)/g, "") || "item";
+}
+
+function renderPhotoPreview(entries) {
+  const wrap = document.getElementById("photoPreview");
+  if (!entries || entries.length === 0) {
+    wrap.innerHTML = "";
+    return;
+  }
+  wrap.innerHTML = entries
+    .map(function (entry) {
+      const url = URL.createObjectURL(entry.file);
+      return (
+        '<div class="thumb"><img src="' + url + '" alt=""><span class="fname">' +
+        entry.filename + "</span></div>"
+      );
+    })
+    .join("");
+}
 
 function clearForm() {
   el.name.value = "";
@@ -226,8 +288,30 @@ function clearForm() {
   el.colors.value = "";
   el.desc.value = "";
   el.images.value = "";
+  el.photofiles.value = "";
+  document.getElementById("photoPreview").innerHTML = "";
+  document.getElementById("attachedNote").textContent = "";
   el.instock.checked = true;
 }
+
+el.photofiles.addEventListener("change", function () {
+  const files = Array.from(el.photofiles.files || []);
+  if (files.length === 0) {
+    document.getElementById("photoPreview").innerHTML = "";
+    return;
+  }
+  const baseSlug = slugify(el.name.value || "item");
+  const colorsList = splitList(el.colors.value);
+  const useColorNames = colorsList.length === files.length;
+  const previewEntries = files.map(function (file, i) {
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const suffix = useColorNames ? slugify(colorsList[i]) : String(i + 1);
+    return { file: file, filename: baseSlug + "-" + suffix + "." + ext };
+  });
+  renderPhotoPreview(previewEntries);
+  document.getElementById("attachedNote").textContent =
+    files.length + " photo(s) ready — will be renamed as shown above when you save.";
+});
 
 document.getElementById("saveBtn").addEventListener("click", function () {
   const name = el.name.value.trim();
@@ -238,18 +322,39 @@ document.getElementById("saveBtn").addEventListener("click", function () {
   if (!price || price <= 0) { alert("Please enter a valid price."); return; }
   if (sizes.length === 0) { alert("Please enter at least one size (use \"One Size\" if it doesn't need sizing)."); return; }
 
-  const enteredImages = splitList(el.images.value);
-  const images = enteredImages.length > 0
-    ? enteredImages
-    : ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"];
+  const productId = editingIndex !== null ? products[editingIndex].id : nextId();
+  const colorsList = splitList(el.colors.value);
+  const attachedFiles = el.photofiles.files && el.photofiles.files.length > 0
+    ? Array.from(el.photofiles.files)
+    : null;
+
+  let images;
+  if (attachedFiles) {
+    const baseSlug = slugify(name);
+    const useColorNames = colorsList.length === attachedFiles.length;
+    const newEntries = attachedFiles.map(function (file, i) {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const suffix = useColorNames ? slugify(colorsList[i]) : String(i + 1);
+      return { file: file, filename: baseSlug + "-" + suffix + "." + ext };
+    });
+    photoFiles[productId] = newEntries;
+    images = newEntries.map(function (e) { return "images/" + e.filename; });
+  } else {
+    const enteredImages = splitList(el.images.value);
+    images = enteredImages.length > 0
+      ? enteredImages
+      : (photoFiles[productId]
+          ? photoFiles[productId].map(function (e) { return "images/" + e.filename; })
+          : ["https://placehold.co/600x750/1E3A2C/FBF7EF?text=Add+Your+Photo"]);
+  }
 
   const product = {
-    id: editingIndex !== null ? products[editingIndex].id : nextId(),
+    id: productId,
     name: name,
     category: el.category.value,
     price: price,
     sizes: sizes,
-    colors: splitList(el.colors.value),
+    colors: colorsList,
     description: el.desc.value.trim() || "No description added yet.",
     images: images,
     badge: el.badge.value,
@@ -291,6 +396,16 @@ function editProduct(index) {
   const imgs = Array.isArray(p.images) ? p.images : (p.image ? [p.image] : []);
   el.images.value = imgs.filter(function (src) { return src.indexOf("placehold.co") === -1; }).join(", ");
   el.instock.checked = p.inStock !== false;
+  el.photofiles.value = "";
+  const existingEntries = photoFiles[p.id];
+  if (existingEntries && existingEntries.length > 0) {
+    renderPhotoPreview(existingEntries);
+    document.getElementById("attachedNote").textContent =
+      existingEntries.length + " real photo(s) already attached. Choose new files above only if you want to replace them.";
+  } else {
+    document.getElementById("photoPreview").innerHTML = "";
+    document.getElementById("attachedNote").textContent = "";
+  }
 
   editingIndex = index;
   document.getElementById("formTitle").textContent = "2. Edit product — " + p.name;
@@ -301,6 +416,8 @@ function editProduct(index) {
 
 function removeProduct(index) {
   if (!confirm("Remove \"" + products[index].name + "\" from the list?")) return;
+  const removedId = products[index].id;
+  delete photoFiles[removedId];
   products.splice(index, 1);
   saveToStorage();
   renderList();
@@ -323,9 +440,12 @@ function renderList() {
     const stockHtml = p.inStock === false
       ? '<span class="badge-tag soldout-tag">Sold Out</span>'
       : "";
+    const photoHtml = (photoFiles[p.id] && photoFiles[p.id].length > 0)
+      ? '<span class="photo-tag">📷 ' + photoFiles[p.id].length + ' real photo(s)</span>'
+      : '<span class="photo-tag" style="background:var(--rust);">No real photo yet</span>';
     return (
       "<tr>" +
-      "<td><strong>" + p.name + "</strong>" + badgeHtml + stockHtml + "<br><span style='color:var(--charcoal-soft)'>" + p.id + " · " + p.category + "</span></td>" +
+      "<td><strong>" + p.name + "</strong>" + badgeHtml + stockHtml + "<br>" + photoHtml + "<br><span style='color:var(--charcoal-soft)'>" + p.id + " · " + p.category + "</span></td>" +
       "<td>KES " + Number(p.price).toLocaleString() + "</td>" +
       "<td>" + (p.sizes || []).join(", ") + "</td>" +
       "<td>" + ((p.colors || []).join(", ") || "—") + "</td>" +
@@ -377,6 +497,46 @@ const PRODUCTS = [
 
   return header + blocks + footer;
 }
+
+document.getElementById("downloadPhotosBtn").addEventListener("click", function () {
+  const status = document.getElementById("photosStatus");
+  const ids = Object.keys(photoFiles).filter(function (id) {
+    return photoFiles[id] && photoFiles[id].length > 0;
+  });
+
+  if (ids.length === 0) {
+    status.textContent = "No real photos attached yet — attach photos in the form above first.";
+    return;
+  }
+  if (typeof JSZip === "undefined") {
+    status.textContent = "Couldn't load the ZIP tool — check your internet connection and try again.";
+    return;
+  }
+
+  status.textContent = "Building ZIP…";
+  const zip = new JSZip();
+  const imgFolder = zip.folder("images");
+  let fileCount = 0;
+  ids.forEach(function (id) {
+    photoFiles[id].forEach(function (entry) {
+      imgFolder.file(entry.filename, entry.file);
+      fileCount++;
+    });
+  });
+
+  zip.generateAsync({ type: "blob" }).then(function (blob) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "dk-collections-photos.zip";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    status.textContent =
+      "Downloaded " + fileCount + " renamed photo(s) ✓ — unzip it, then drag everything inside its \"images\" folder into your images folder on GitHub.";
+  });
+});
 
 document.getElementById("generateBtn").addEventListener("click", function () {
   if (products.length === 0) {
