@@ -311,6 +311,42 @@ const PRODUCTS = [
     badge: "New",
     inStock: true,
   },
+  {
+    id: "p22",
+    name: "New Balance 2002R",
+    category: "shoes",
+    price: 4000,
+    sizes: ["37", "38", "39", "40", "41", "42", "43", "44", "45"],
+    colors: ["White", "Grey", "White/Pink/Yellow", "Black", "White/Pink", "White/Blue/Orange"],
+    description:
+      "New Balance 2002R sneakers — retro chunky design, comfortable everyday wear.",
+    images: [
+      "images/nb-2002r-white.jpg",
+      "images/nb-2002r-grey.jpg",
+      "images/nb-2002r-white-pink-yellow.jpg",
+      "images/nb-2002r-black.jpg",
+      "images/nb-2002r-white-pink.jpg",
+      "images/nb-2002r-white-blue-orange.jpg",
+    ],
+    badge: "",
+    inStock: true,
+  },
+  {
+    id: "p23",
+    name: "Designer Leather Wetlook Loafers",
+    category: "shoes",
+    price: 4500,
+    sizes: ["39", "40", "41", "42", "43", "44", "45"],
+    colors: ["Black/White", "Black"],
+    description:
+      "Designer leather smart casual wetlook loafers — glossy patent finish, chunky sole, sharp everyday style.",
+    images: [
+      "images/wetlook-loafers-black-white.jpg",
+      "images/wetlook-loafers-black.jpg",
+    ],
+    badge: "",
+    inStock: true,
+  },
 
   // 👇 Add new products above this line, just before the closing bracket.
 ];
