@@ -275,7 +275,7 @@ const PRODUCTS = [
       "images/wwoor-gold-black.jpg",
       "images/wwoor-two-tone-black.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
   {
@@ -292,7 +292,7 @@ const PRODUCTS = [
       "images/cartier-ladies-blue.jpg",
       "images/cartier-ladies-black.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
   {
@@ -308,7 +308,7 @@ const PRODUCTS = [
       "images/mules-black-textured.jpg",
       "images/mules-black-patent.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
   {
@@ -367,7 +367,7 @@ const PRODUCTS = [
       "images/ralph-lauren-shirt-navy.jpg",
       "images/ralph-lauren-shirt-cream.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
   {
@@ -389,7 +389,7 @@ const PRODUCTS = [
       "images/ralph-lauren-short-sleeve-pink.jpg",
       "images/ralph-lauren-short-sleeve-black.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
   {
@@ -409,7 +409,7 @@ const PRODUCTS = [
       "images/polo-tshirt-grey.jpg",
       "images/polo-tshirt-olive.jpg",
     ],
-    badge: "New",
+    badge: "",
     inStock: true,
   },
 
