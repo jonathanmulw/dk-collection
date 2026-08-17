@@ -313,13 +313,13 @@ const PRODUCTS = [
   },
   {
     id: "p22",
-    name: "New Balance 2002R",
+    name: "New Balance 2000R",
     category: "shoes",
     price: 4000,
     sizes: ["37", "38", "39", "40", "41", "42", "43", "44", "45"],
     colors: ["White", "Grey", "White/Pink/Yellow", "Black", "White/Pink", "White/Blue/Orange"],
     description:
-      "New Balance 2002R sneakers — retro chunky design, comfortable everyday wear.",
+      "New Balance 2000R sneakers — retro chunky design, comfortable everyday wear.",
     images: [
       "images/nb-2002r-white.jpg",
       "images/nb-2002r-grey.jpg",
