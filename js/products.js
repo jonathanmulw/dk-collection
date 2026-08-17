@@ -412,6 +412,48 @@ const PRODUCTS = [
     badge: "",
     inStock: true,
   },
+  {
+    id: "p27",
+    name: "Officials Formal Shoes",
+    category: "shoes",
+    price: 3500,
+    sizes: ["39", "40", "41", "42", "43", "44", "45"],
+    colors: ["Brown Loafer", "Black Loafer", "Brogue Oxford", "Monk Strap", "Tassel Loafer", "Black Oxford", "Suede Panel Oxford", "Patent Loafer", "Patent Oxford", "Patent Textured Oxford"],
+    description:
+      "Officials formal dress shoes — a range of styles including loafers, oxfords, and monk straps. Sharp, polished finish for office and formal wear.",
+    images: [
+      "images/officials-shoes-brown.jpg",
+      "images/officials-shoes-black.jpg",
+      "images/officials-shoes-oxford-brogue.jpg",
+      "images/officials-shoes-monk-strap.jpg",
+      "images/officials-shoes-tassel-loafer.jpg",
+      "images/officials-shoes-oxford-black.jpg",
+      "images/officials-shoes-oxford-suede-panel.jpg",
+      "images/officials-shoes-patent-loafer.jpg",
+      "images/officials-shoes-patent-oxford.jpg",
+      "images/officials-shoes-patent-oxford-textured.jpg",
+    ],
+    badge: "",
+    inStock: true,
+  },
+  {
+    id: "p28",
+    name: "Boss Casuals",
+    category: "shoes",
+    price: 3500,
+    sizes: ["40", "41", "42", "43", "44", "45"],
+    colors: ["Grey", "Tan", "Black", "Dark Brown"],
+    description:
+      "Boss casual sneakers — smart-casual leather design with contrast sole, comfortable everyday wear.",
+    images: [
+      "images/boss-casuals-grey.jpg",
+      "images/boss-casuals-tan.jpg",
+      "images/boss-casuals-black.jpg",
+      "images/boss-casuals-dark-brown.jpg",
+    ],
+    badge: "",
+    inStock: true,
+  },
 
   // 👇 Add new products above this line, just before the closing bracket.
 ];
